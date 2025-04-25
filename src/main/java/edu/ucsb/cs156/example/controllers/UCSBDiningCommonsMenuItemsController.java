@@ -78,4 +78,19 @@ public class UCSBDiningCommonsMenuItemsController extends ApiController {
 
         return savedUcsbDiningCommonsMenuItem;
     }
+
+    /**
+     * Get a single record from the table; 
+     * use the value passed in as a @RequestParam to do a lookup by id. 
+     * If a matching row is found, return the row as a JSON object, 
+     * otherwise throw an EntityNotFoundException.
+     * @return a UCSBDiningCommonsMenuitem JSON object
+     */
+    @Operation(summary= "List a particular ucsb dining commons menu item by id")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("")
+    public UCSBDiningCommonsMenuItem getUCSBDiningCommonsMenuItem(@Parameter(name="id") @RequestParam Long id) {
+        UCSBDiningCommonsMenuItem item = ucsbDiningCommonsMenuItemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(UCSBDiningCommonsMenuItem.class, id));
+        return item;
+    }
 }
