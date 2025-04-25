@@ -5,8 +5,11 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,10 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.ucsb.cs156.example.entities.Articles;
+import edu.ucsb.cs156.example.errors.EntityNotFoundException;
 import edu.ucsb.cs156.example.repositories.ArticlesRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -83,5 +88,22 @@ import lombok.extern.slf4j.Slf4j;
  
          return savedArticles;
      }
+
+     /**
+      * Get a single article by id
+      * 
+      * @param id the id of the articles
+      * @return a Articles
+      */
+      @Operation(summary= "Get a single article")
+      @PreAuthorize("hasRole('ROLE_USER')")
+      @GetMapping("")
+      public Articles getById(
+              @Parameter(name="id") @RequestParam Long id) {
+          Articles articles = articlesRepository.findById(id)
+                  .orElseThrow(() -> new EntityNotFoundException(Articles.class, id));
+  
+          return articles;
+      }
  }
  
