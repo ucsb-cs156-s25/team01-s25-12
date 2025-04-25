@@ -3,11 +3,9 @@ package edu.ucsb.cs156.example.controllers;
 import edu.ucsb.cs156.example.repositories.UserRepository;
 import edu.ucsb.cs156.example.testconfig.TestConfig;
 import edu.ucsb.cs156.example.ControllerTestCase;
-import edu.ucsb.cs156.example.entities.UCSBDate;
 import edu.ucsb.cs156.example.entities.UCSBDiningCommonsMenuItem;
 import edu.ucsb.cs156.example.repositories.UCSBDiningCommonsMenuItemRepository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
@@ -46,7 +44,7 @@ public class UCSBDiningCommonsMenuItemsControllerTests extends ControllerTestCas
 
     @WithMockUser(roles = { "USER" })
     @Test
-    public void logged_in_user_can_get_all_ucsbdates() throws Exception {
+    public void logged_in_user_can_get_all_ucsbdiningcommonsmenuitems() throws Exception {
         UCSBDiningCommonsMenuItem ucsbDiningCommonsMenuItem1 = UCSBDiningCommonsMenuItem.builder()
                         .name("firstDiningCommonsMenuItem")
                         .diningCommonsCode("firstDiningCommonsCode")
@@ -76,7 +74,7 @@ public class UCSBDiningCommonsMenuItemsControllerTests extends ControllerTestCas
         assertEquals(expectedJson, responseString);
     }
 
-    // Authorization tests for /api/ucsbdates/post
+    // Authorization tests for /api/ucsbdiningcommonsmenuitems/post
     // (Perhaps should also have these for put and delete)
 
     @Test
