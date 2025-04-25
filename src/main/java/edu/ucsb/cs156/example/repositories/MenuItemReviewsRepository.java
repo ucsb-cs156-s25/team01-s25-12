@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  * The MenuItemReviewsRepository is a repository for MenuItemReviews entities
  */
 @Repository
-public interface MenuItemReviewsRepository extends CrudRepository<MenuItemReviews, String> {
+public interface MenuItemReviewsRepository extends CrudRepository<MenuItemReviews, Long> {
  
 }
