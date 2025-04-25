@@ -78,20 +78,5 @@ import jakarta.validation.Valid;
 
 <span class="fc" id="L79">        return savedUcsbDiningCommonsMenuItem;</span>
     }
-
-    /**
-     * Get a single record from the table; 
-     * use the value passed in as a @RequestParam to do a lookup by id. 
-     * If a matching row is found, return the row as a JSON object, 
-     * otherwise throw an EntityNotFoundException.
-     * @return a UCSBDiningCommonsMenuitem JSON object
-     */
-    @Operation(summary= &quot;List a particular ucsb dining commons menu item by id&quot;)
-    @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
-    @GetMapping(&quot;&quot;)
-    public UCSBDiningCommonsMenuItem getUCSBDiningCommonsMenuItem(@Parameter(name=&quot;id&quot;) @RequestParam Long id) {
-<span class="fc" id="L93">        UCSBDiningCommonsMenuItem item = ucsbDiningCommonsMenuItemRepository.findById(id).orElseThrow(() -&gt; new EntityNotFoundException(UCSBDiningCommonsMenuItem.class, id));</span>
-<span class="fc" id="L94">        return item;</span>
-    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
