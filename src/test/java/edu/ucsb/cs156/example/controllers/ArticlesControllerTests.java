@@ -42,7 +42,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
         @MockBean
         UserRepository userRepository;
 
-        // Authorization tests for /api/ucsbdates/admin/all
+        // Authorization tests for /api/articles/admin/all
 
         @Test
         public void logged_out_users_cannot_get_all() throws Exception {
@@ -119,7 +119,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
-        public void an_admin_user_can_post_a_new_ucsbdate() throws Exception {
+        public void an_admin_user_can_post_a_new_article() throws Exception {
                 // arrange
 
                 LocalDateTime ldt1 = LocalDateTime.parse("2025-04-24T00:00:00");
