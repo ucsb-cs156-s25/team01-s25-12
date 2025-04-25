@@ -92,7 +92,7 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                                 .tableOrBreakoutRoom("table-12")
                                 .requestTime(ldt2)
                                 .explanation("my socks are untied")
-                                .solved(false)
+                                .solved(true)
                                 .build();
 
                 ArrayList<HelpRequest> expectedHelpRequests = new ArrayList<>();
@@ -125,14 +125,14 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                                 .tableOrBreakoutRoom("table-1")
                                 .requestTime(ldt1)
                                 .explanation("short_msg")
-                                .solved(false)
+                                .solved(true)
                                 .build();
 
                 when(helpRequestRepository.save(eq(helpRequest1))).thenReturn(helpRequest1);
 
                 // act
                 MvcResult response = mockMvc.perform(
-                                post("/api/helprequests/post?requesterEmail=user1@ucsb.edu&teamId=team-01&tableOrBreakoutRoom=table-1&requestTime=2022-01-03T00:00:00&explanation=short_msg&solved=false")
+                                post("/api/helprequests/post?requesterEmail=user1@ucsb.edu&teamId=team-01&tableOrBreakoutRoom=table-1&requestTime=2022-01-03T00:00:00&explanation=short_msg&solved=true")
                                                 .with(csrf()))
                                 .andExpect(status().isOk()).andReturn();
 
