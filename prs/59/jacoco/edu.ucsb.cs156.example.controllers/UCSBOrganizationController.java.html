@@ -66,14 +66,10 @@ import jakarta.validation.Valid;
         @Parameter(name=&quot;orgTranslation&quot;) @RequestParam String orgTranslation,
         @Parameter(name=&quot;inactive&quot;) @RequestParam boolean inactive
     ) {
-<span class="fc" id="L69">        UCSBOrganization org = new UCSBOrganization();</span>
-<span class="fc" id="L70">        org.setOrgCode(orgCode);</span>
-<span class="fc" id="L71">        org.setOrgTranslationShort(orgTranslationShort);</span>
-<span class="fc" id="L72">        org.setOrgTranslation(orgTranslation);</span>
-<span class="fc" id="L73">        org.setInactive(inactive);</span>
+<span class="fc" id="L69">        UCSBOrganization org = new UCSBOrganization(orgCode, orgTranslationShort, orgTranslation, inactive);</span>
 
-<span class="fc" id="L75">        UCSBOrganization savedOrg = ucsbOrganizationRepository.save(org);</span>
-<span class="fc" id="L76">        return savedOrg;</span>
+<span class="fc" id="L71">        UCSBOrganization savedOrg = ucsbOrganizationRepository.save(org);</span>
+<span class="fc" id="L72">        return savedOrg;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
