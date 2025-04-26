@@ -22,4 +22,5 @@ public class UCSBOrganization {
     private String orgTranslation;
 
     private boolean inactive;
+
 }
