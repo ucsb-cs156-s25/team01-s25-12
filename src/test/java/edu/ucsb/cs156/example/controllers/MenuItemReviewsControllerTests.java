@@ -204,10 +204,10 @@ public class MenuItemReviewsControllerTests extends ControllerTestCase {
 
                 MenuItemReviews menuItemReviewsEdited = MenuItemReviews.builder()
                     .itemId(7)
-                    .reviewerEmail("cgaucho@ucsb.edu")
-                    .stars(5)
-                    .comments("I love the apple pie")
-                    .dateReviewed(ldt1)
+                    .reviewerEmail("simonryan@ucsb.edu")
+                    .stars(1)
+                    .comments("I did not love the apple pie")
+                    .dateReviewed(ldt2)
                     .build();
 
                 String requestBody = mapper.writeValueAsString(menuItemReviewsEdited);
