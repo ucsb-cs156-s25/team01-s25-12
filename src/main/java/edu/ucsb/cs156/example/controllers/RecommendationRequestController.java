@@ -90,5 +90,21 @@ public class RecommendationRequestController extends ApiController {
         RecommendationRequest savedRecommendationRequest = recommendationRequestRepository.save(rRequest);
         return savedRecommendationRequest;
 }
+    /**
+     * Get a single recommendation request
+     * 
+     * @param id the id of the recommendation request
+     * @return a RecommendationRequest
+     */
+    @Operation(summary= "Get a single recommendation request")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("")
+    public RecommendationRequest getById(
+            @Parameter(name="id") @RequestParam Long id) {
+        RecommendationRequest recReq = recommendationRequestRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(RecommendationRequest.class, id));
+
+        return recReq;
+    }
 
 }

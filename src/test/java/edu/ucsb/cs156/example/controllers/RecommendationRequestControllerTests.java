@@ -157,5 +157,62 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
             assertEquals(expectedJson, responseString);
     }
 
+    // tests for getting a single recommendation request by id
+        @Test
+        public void logged_out_users_cannot_get_by_id() throws Exception {
+                mockMvc.perform(get("/api/recommendationrequest?id=7"))
+                                .andExpect(status().is(403)); // logged out users can't get by id
+        }
+
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void test_that_logged_in_user_cannot_get_by_id_when_id_does_not_exist() throws Exception {
+
+        // arrange
+        when(recommendationRequestRepository.findById(eq(7L))).thenReturn(Optional.empty());
+
+        // act
+        MvcResult response = mockMvc.perform(get("/api/recommendationrequest?id=7"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        // assert
+        verify(recommendationRequestRepository, times(1)).findById(eq(7L));
+        Map<String, Object> json = responseToJson(response);
+        assertEquals("EntityNotFoundException", json.get("type"));
+        assertEquals("RecommendationRequest with id 7 not found", json.get("message"));
+        }
+
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void test_that_logged_in_user_can_get_by_id_when_id_exists() throws Exception {
+
+        // arrange
+        LocalDateTime dateRequested = LocalDateTime.parse("2022-01-01T00:00:00");
+        LocalDateTime dateNeeded = LocalDateTime.parse("2022-02-01T00:00:00");
+
+        RecommendationRequest recommendationRequest = RecommendationRequest.builder()
+                .id(7L)
+                .requesterEmail("student1@ucsb.edu")
+                .professorEmail("prof1@ucsb.edu")
+                .explanation("please recommend me")
+                .dateRequested(dateRequested)
+                .dateNeeded(dateNeeded)
+                .done(false)
+                .build();
+
+        when(recommendationRequestRepository.findById(eq(7L))).thenReturn(Optional.of(recommendationRequest));
+
+        // act
+        MvcResult response = mockMvc.perform(get("/api/recommendationrequest?id=7"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // assert
+        verify(recommendationRequestRepository, times(1)).findById(eq(7L));
+        String expectedJson = mapper.writeValueAsString(recommendationRequest);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedJson, responseString);
+        }
 
 }
