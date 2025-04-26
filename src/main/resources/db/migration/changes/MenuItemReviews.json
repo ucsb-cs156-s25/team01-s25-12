@@ -29,13 +29,13 @@
                         "primaryKey": true,
                         "primaryKeyName": "MENUITEMREVIEWS_PK"
                       },
-                      "name": "ITEMID",
+                      "name": "ITEM_ID",
                       "type": "BIGINT"
                     }
                   },
                   {
                     "column": {
-                      "name": "EMAIL",
+                      "name": "REVIEWER_EMAIL",
                       "type": "VARCHAR(255)"
                     }
                   },
@@ -47,14 +47,14 @@
                   },
                   {
                     "column": {
-                      "name": "LOCAL_DATE_TIME",
-                      "type": "TIMESTAMP"
+                      "name": "COMMENTS",
+                      "type": "VARCHAR(255)"
                     }
                   },
                   {
                     "column": {
-                      "name": "COMMENTS",
-                      "type": "VARCHAR(255)"
+                      "name": "DATE_REVIEWED",
+                      "type": "TIMESTAMP"
                     }
                   }
                 ],
