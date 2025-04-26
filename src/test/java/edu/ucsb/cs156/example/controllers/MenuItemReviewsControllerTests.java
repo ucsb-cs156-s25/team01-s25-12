@@ -204,10 +204,10 @@ public class MenuItemReviewsControllerTests extends ControllerTestCase {
 
                 MenuItemReviews menuItemReviewsEdited = MenuItemReviews.builder()
                     .itemId(7)
-                    .reviewerEmail("cgaucho@ucsb.edu")
-                    .stars(5)
-                    .comments("I love the apple pie")
-                    .dateReviewed(ldt1)
+                    .reviewerEmail("simonryan@ucsb.edu")
+                    .stars(1)
+                    .comments("I did not love the apple pie")
+                    .dateReviewed(ldt2)
                     .build();
 
                 String requestBody = mapper.writeValueAsString(menuItemReviewsEdited);
@@ -264,5 +264,55 @@ public class MenuItemReviewsControllerTests extends ControllerTestCase {
                 assertEquals("MenuItemReviews with id 67 not found", json.get("message"));
 
         }
-        
+
+        @WithMockUser(roles = { "ADMIN", "USER" })
+        @Test
+        public void admin_can_delete_a_menuitemreviews() throws Exception {
+                // arrange
+
+                LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+
+                MenuItemReviews menuItemReviews1 = MenuItemReviews.builder()
+                    .itemId(47)
+                    .reviewerEmail("cgaucho@ucsb.edu")
+                    .stars(5)
+                    .comments("I love the apple pie")
+                    .dateReviewed(ldt1)
+                    .build();
+
+                when(menuItemReviewsRepository.findById(eq(15L))).thenReturn(Optional.of(menuItemReviews1));
+
+                // act
+                MvcResult response = mockMvc.perform(
+                                delete("/api/menuitemreviews?id=15")
+                                                .with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+
+                // assert
+                verify(menuItemReviewsRepository, times(1)).findById(15L);
+                verify(menuItemReviewsRepository, times(1)).delete(eq(menuItemReviews1));
+
+                Map<String, Object> json = responseToJson(response);
+                assertEquals("MenuItemReviews with id 15 deleted", json.get("message"));
+        }
+
+        @WithMockUser(roles = { "ADMIN", "USER" })
+        @Test
+        public void admin_tries_to_delete_non_existant_menuitemreviews_and_gets_right_error_message()
+                        throws Exception {
+                // arrange
+
+                when(menuItemReviewsRepository.findById(eq(15L))).thenReturn(Optional.empty());
+
+                // act
+                MvcResult response = mockMvc.perform(
+                                delete("/api/menuitemreviews?id=15")
+                                                .with(csrf()))
+                                .andExpect(status().isNotFound()).andReturn();
+
+                // assert
+                verify(menuItemReviewsRepository, times(1)).findById(15L);
+                Map<String, Object> json = responseToJson(response);
+                assertEquals("MenuItemReviews with id 15 not found", json.get("message"));
+        }
 }
