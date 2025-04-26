@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -172,7 +173,7 @@ public class ArticlesControllerTests extends ControllerTestCase {
 
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
-        public void an_admin_user_can_post_a_new_article() throws Exception {
+        public void an_admin_user_can_post_a_new_articles() throws Exception {
                 // arrange
 
                 LocalDateTime ldt1 = LocalDateTime.parse("2025-04-24T00:00:00");
@@ -242,6 +243,57 @@ public class ArticlesControllerTests extends ControllerTestCase {
                 verify(articlesRepository, times(1)).save(articlesEdited); // should be saved with correct user
                 String responseString = response.getResponse().getContentAsString();
                 assertEquals(requestBody, responseString);
+        }
+
+        @WithMockUser(roles = { "ADMIN", "USER" })
+        @Test
+        public void admin_can_delete_an_articles() throws Exception {
+                // arrange
+
+                LocalDateTime ldt1 = LocalDateTime.parse("2025-04-24T00:00:00");
+
+                Articles articles1 = Articles.builder()
+                                .title("testarticle1")
+                                .url("testarticle1.com")
+                                .explanation("article1usedfortesting")
+                                .email("testemail1@testing.com")
+                                .dateAdded(ldt1)
+                                .build();
+
+                when(articlesRepository.findById(eq(15L))).thenReturn(Optional.of(articles1));
+
+                // act
+                MvcResult response = mockMvc.perform(
+                                delete("/api/articles?id=15")
+                                                .with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+
+                // assert
+                verify(articlesRepository, times(1)).findById(15L);
+                verify(articlesRepository, times(1)).delete(any());
+
+                Map<String, Object> json = responseToJson(response);
+                assertEquals("Articles with id 15 deleted", json.get("message"));
+        }
+
+        @WithMockUser(roles = { "ADMIN", "USER" })
+        @Test
+        public void admin_tries_to_delete_non_existant_articles_and_gets_right_error_message()
+                        throws Exception {
+                // arrange
+
+                when(articlesRepository.findById(eq(15L))).thenReturn(Optional.empty());
+
+                // act
+                MvcResult response = mockMvc.perform(
+                                delete("/api/articles?id=15")
+                                                .with(csrf()))
+                                .andExpect(status().isNotFound()).andReturn();
+
+                // assert
+                verify(articlesRepository, times(1)).findById(15L);
+                Map<String, Object> json = responseToJson(response);
+                assertEquals("Articles with id 15 not found", json.get("message"));
         }
 
         @WithMockUser(roles = { "ADMIN", "USER" })

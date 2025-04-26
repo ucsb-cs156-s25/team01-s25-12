@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -104,6 +105,24 @@ import lombok.extern.slf4j.Slf4j;
   
           return articles;
       }
+
+     /**
+      * Delete an Article
+      * 
+      * @param id the id of the article to delete
+      * @return a message indicating the article was deleted
+      */
+     @Operation(summary= "Delete an article")
+     @PreAuthorize("hasRole('ROLE_ADMIN')")
+     @DeleteMapping("")
+     public Object deleteArticles(
+             @Parameter(name="id") @RequestParam Long id) {
+         Articles articles = articlesRepository.findById(id)
+                 .orElseThrow(() -> new EntityNotFoundException(Articles.class, id));
+ 
+         articlesRepository.delete(articles);
+         return genericMessage("Articles with id %s deleted".formatted(id));
+     }
 
      /**
       * Update a single article
