@@ -81,7 +81,7 @@ import jakarta.validation.Valid;
 
 <span class="fc" id="L82">        org.setOrgTranslationShort(incoming.getOrgTranslationShort());</span>
 <span class="fc" id="L83">        org.setOrgTranslation(incoming.getOrgTranslation());</span>
-<span class="fc" id="L84">        org.setInactive(incoming.isInactive());</span>
+<span class="fc" id="L84">        org.setInactive(incoming.getInactive());</span>
 
 <span class="fc" id="L86">        ucsbOrganizationRepository.save(org);</span>
 <span class="fc" id="L87">        return org;</span>
@@ -105,14 +105,10 @@ import jakarta.validation.Valid;
         @Parameter(name=&quot;orgTranslation&quot;) @RequestParam String orgTranslation,
         @Parameter(name=&quot;inactive&quot;) @RequestParam boolean inactive
     ) {
-<span class="fc" id="L108">        UCSBOrganization org = new UCSBOrganization();</span>
-<span class="fc" id="L109">        org.setOrgCode(orgCode);</span>
-<span class="fc" id="L110">        org.setOrgTranslationShort(orgTranslationShort);</span>
-<span class="fc" id="L111">        org.setOrgTranslation(orgTranslation);</span>
-<span class="fc" id="L112">        org.setInactive(inactive);</span>
+<span class="fc" id="L108">        UCSBOrganization org = new UCSBOrganization(orgCode, orgTranslationShort, orgTranslation, inactive);</span>
 
-<span class="fc" id="L114">        UCSBOrganization savedOrg = ucsbOrganizationRepository.save(org);</span>
-<span class="fc" id="L115">        return savedOrg;</span>
+<span class="fc" id="L110">        UCSBOrganization savedOrg = ucsbOrganizationRepository.save(org);</span>
+<span class="fc" id="L111">        return savedOrg;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
