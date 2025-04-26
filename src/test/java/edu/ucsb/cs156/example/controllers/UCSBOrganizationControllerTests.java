@@ -72,6 +72,89 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
                                 .andExpect(status().is(403)); // only admins can post
         }
 
+        // Tests for PUT
+
+        @Test
+        public void logged_out_users_cannot_put() throws Exception {
+                mockMvc.perform(put("/api/ucsborganizations?id=whatever"))
+                .andExpect(status().is(403));
+        }
+
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void logged_in_regular_users_cannot_put() throws Exception {
+                mockMvc.perform(put("/api/ucsborganizations?id=whatever"))
+                .andExpect(status().is(403));
+        }
+
+        @WithMockUser(roles = { "ADMIN", "USER" })
+        @Test
+        public void admin_can_edit_existing_organization() throws Exception {
+                UCSBOrganization orig = UCSBOrganization.builder()
+                .orgCode("robotics")
+                .orgTranslationShort("Robotics Club")
+                .orgTranslation("UCSB Robotics Club")
+                .inactive(false)
+                .build();
+
+                UCSBOrganization edited = UCSBOrganization.builder()
+                .orgCode("robotics")
+                .orgTranslationShort("Robo Club")
+                .orgTranslation("Gaucho Robotics Club")
+                .inactive(true)
+                .build();
+
+                String requestBody = mapper.writeValueAsString(edited);
+
+                when(ucsbOrganizationRepository.findById(eq("robotics")))
+                .thenReturn(Optional.of(orig));
+
+                MvcResult response = mockMvc.perform(
+                        put("/api/ucsborganizations?id=robotics")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+                verify(ucsbOrganizationRepository, times(1)).findById("robotics");
+                verify(ucsbOrganizationRepository, times(1)).save(edited);
+
+                String responseString = response.getResponse().getContentAsString();
+                assertEquals(requestBody, responseString);
+        }
+
+        @WithMockUser(roles = { "ADMIN", "USER" })
+        @Test
+        public void admin_cannot_edit_organization_that_does_not_exist() throws Exception {
+                UCSBOrganization edited = UCSBOrganization.builder()
+                .orgCode("nope")
+                .orgTranslationShort("Nope Short")
+                .orgTranslation("No Such Organization")
+                .inactive(false)
+                .build();
+
+                String requestBody = mapper.writeValueAsString(edited);
+
+                when(ucsbOrganizationRepository.findById(eq("nope")))
+                .thenReturn(Optional.empty());
+
+                MvcResult response = mockMvc.perform(
+                        put("/api/ucsborganizations?id=nope")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody)
+                        .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+                verify(ucsbOrganizationRepository, times(1)).findById("nope");
+                Map<String, Object> json = responseToJson(response);
+                assertEquals("EntityNotFoundException", json.get("type"));
+                assertEquals("UCSBOrganization with id nope not found", json.get("message"));
+        }
+
         // Functional tests for GET all
         @WithMockUser(roles = { "USER" })
         @Test
