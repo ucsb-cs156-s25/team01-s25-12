@@ -155,4 +155,51 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
                 String expectedJson = mapper.writeValueAsString(newOrg);
                 assertEquals(expectedJson, res.getResponse().getContentAsString());
         }
+
+
+        @Test
+        public void logged_out_users_cannot_get_by_id() throws Exception {
+                mockMvc.perform(get("/api/ucsborganizations?orgCode=doesnotmatter"))
+                .andExpect(status().is(403));
+        }
+
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void logged_in_users_can_get_by_id_when_it_exists() throws Exception {
+                UCSBOrganization org = UCSBOrganization.builder()
+                .orgCode("ieee")
+                .orgTranslationShort("IEEE")
+                .orgTranslation("Institute of Electrical and Electronics Engineers")
+                .inactive(false)
+                .build();
+
+                when(ucsbOrganizationRepository.findById(eq("ieee")))
+                .thenReturn(Optional.of(org));
+
+                MvcResult result = mockMvc.perform(get("/api/ucsborganizations")
+                                        .param("orgCode", "ieee"))
+                                        .andExpect(status().isOk())
+                                        .andReturn();
+
+                verify(ucsbOrganizationRepository, times(1)).findById("ieee");
+                String expectedJson = mapper.writeValueAsString(org);
+                assertEquals(expectedJson, result.getResponse().getContentAsString());
+        }
+
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void logged_in_users_get_404_when_id_not_found() throws Exception {
+                when(ucsbOrganizationRepository.findById(eq("nope")))
+                .thenReturn(Optional.empty());
+
+                MvcResult result = mockMvc.perform(get("/api/ucsborganizations")
+                                        .param("orgCode", "nope"))
+                                        .andExpect(status().isNotFound())
+                                        .andReturn();
+
+                verify(ucsbOrganizationRepository, times(1)).findById("nope");
+                Map<String,Object> json = responseToJson(result);
+                assertEquals("EntityNotFoundException", json.get("type"));
+                assertEquals("UCSBOrganization with id nope not found", json.get("message"));
+        }
 }
