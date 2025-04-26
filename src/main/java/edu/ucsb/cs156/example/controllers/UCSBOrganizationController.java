@@ -81,7 +81,7 @@ public class UCSBOrganizationController extends ApiController {
 
         org.setOrgTranslationShort(incoming.getOrgTranslationShort());
         org.setOrgTranslation(incoming.getOrgTranslation());
-        org.setInactive(incoming.isInactive());
+        org.setInactive(incoming.getInactive());
 
         ucsbOrganizationRepository.save(org);
         return org;
@@ -105,11 +105,7 @@ public class UCSBOrganizationController extends ApiController {
         @Parameter(name="orgTranslation") @RequestParam String orgTranslation,
         @Parameter(name="inactive") @RequestParam boolean inactive
     ) {
-        UCSBOrganization org = new UCSBOrganization();
-        org.setOrgCode(orgCode);
-        org.setOrgTranslationShort(orgTranslationShort);
-        org.setOrgTranslation(orgTranslation);
-        org.setInactive(inactive);
+        UCSBOrganization org = new UCSBOrganization(orgCode, orgTranslationShort, orgTranslation, inactive);
 
         UCSBOrganization savedOrg = ucsbOrganizationRepository.save(org);
         return savedOrg;
