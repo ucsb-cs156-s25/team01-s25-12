@@ -22,4 +22,16 @@ public class UCSBOrganization {
     private String orgTranslation;
 
     private boolean inactive;
+
+    public String getOrgCode() { return orgCode; }
+    public void setOrgCode(String orgCode) { this.orgCode = orgCode; }
+
+    public String getOrgTranslationShort() { return orgTranslationShort; }
+    public void setOrgTranslationShort(String orgTranslationShort) { this.orgTranslationShort = orgTranslationShort; }
+
+    public String getOrgTranslation() { return orgTranslation; }
+    public void setOrgTranslation(String orgTranslation) { this.orgTranslation = orgTranslation; }
+
+    public boolean isInactive() { return inactive; }
+    public void setInactive(boolean inactive) { this.inactive = inactive; }
 }
