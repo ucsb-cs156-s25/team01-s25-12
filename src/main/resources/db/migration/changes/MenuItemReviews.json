@@ -29,6 +29,12 @@
                         "primaryKey": true,
                         "primaryKeyName": "MENUITEMREVIEWS_PK"
                       },
+                      "name": "ID",
+                      "type": "BIGINT"
+                    }
+                  },
+                  {
+                    "column": {
                       "name": "ITEM_ID",
                       "type": "BIGINT"
                     }
