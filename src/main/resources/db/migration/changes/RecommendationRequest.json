@@ -2,8 +2,8 @@
     "databaseChangeLog": [
       {
         "changeSet": {
-          "id": "MenuItemReviews-1",
-          "author": "simony05",
+          "id": "RecommendationRequests-1",
+          "author": "hungkhuu04",
           "preConditions": [
             {
               "onFail": "MARK_RAN"
@@ -12,7 +12,7 @@
               "not": [
                 {
                   "tableExists": {
-                    "tableName": "MENUITEMREVIEWS"
+                    "tableName": "RECOMMENDATIONREQUEST"
                   }
                 }
               ]
@@ -27,7 +27,7 @@
                       "autoIncrement": true,
                       "constraints": {
                         "primaryKey": true,
-                        "primaryKeyName": "MENUITEMREVIEWS_PK"
+                        "primaryKeyName": "RECOMMENDATIONREQUEST_PK"
                       },
                       "name": "ID",
                       "type": "BIGINT"
@@ -35,36 +35,42 @@
                   },
                   {
                     "column": {
-                      "name": "ITEM_ID",
-                      "type": "BIGINT"
-                    }
-                  },
-                  {
-                    "column": {
-                      "name": "REVIEWER_EMAIL",
-                      "type": "VARCHAR(255)"
-                    }
-                  },
-                  {
-                    "column": {
-                      "name": "STARS",
-                      "type": "INT"
-                    }
-                  },
-                  {
-                    "column": {
-                      "name": "COMMENTS",
-                      "type": "VARCHAR(255)"
-                    }
-                  },
-                  {
-                    "column": {
-                      "name": "DATE_REVIEWED",
+                      "name": "DATE_REQUESTED",
                       "type": "TIMESTAMP"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "DATE_NEEDED",
+                      "type": "VARCHAR(255)"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "REQUESTER_EMAIL",
+                      "type": "VARCHAR(255)"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "PROFESSOR_EMAIL",
+                      "type": "VARCHAR(255)"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "EXPLANATION",
+                      "type": "VARCHAR(255)"
+                    }
+                  },
+                  {
+                    "column": {
+                      "name": "DONE",
+                      "type": "BOOLEAN"
                     }
                   }
                 ],
-                "tableName": "MENUITEMREVIEWS"
+                "tableName": "RECOMMENDATIONREQUEST"
               }
             }
           ]
