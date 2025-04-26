@@ -12,22 +12,24 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * This is a JPA entity that represents a Menu Item Review
+ * This is a JPA entity that represents a Recommendation Request
  */
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "menuitemreviews")
-public class MenuItemReviews {
+@Entity(name = "recommendationrequest")
+public class RecommendationRequest {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  private long itemId;
-  private String reviewerEmail;
-  private int stars;
-  private String comments;
-  private LocalDateTime dateReviewed;
+  private String requesterEmail;
+  private String professorEmail;
+  private String explanation;
+  private LocalDateTime dateRequested;
+  private LocalDateTime dateNeeded;
+  private boolean done;
+  
 }
