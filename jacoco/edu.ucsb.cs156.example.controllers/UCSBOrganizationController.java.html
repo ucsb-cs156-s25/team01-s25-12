@@ -47,6 +47,45 @@ import jakarta.validation.Valid;
 <span class="fc" id="L47">        return organizations;</span>
     }
 
+    /**
+     * Get a single UCSBOrganization by its orgCode.
+     * @param orgCode  the primary‐key of the org
+     * @return the matching UCSBOrganization, or 404 if not found
+     */
+    @Operation(summary = &quot;Get a single organization&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
+    @GetMapping(&quot;&quot;) 
+    public UCSBOrganization getById(
+        @Parameter(name=&quot;orgCode&quot;) @RequestParam String orgCode
+    ) {
+<span class="fc" id="L61">        UCSBOrganization org = ucsbOrganizationRepository.findById(orgCode)</span>
+<span class="fc" id="L62">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, orgCode));</span>
+<span class="fc" id="L63">        return org;</span>
+    }
+
+    /**
+     * Update a single UCSBOrganization. Accessible only to users with the role &quot;ROLE_ADMIN&quot;.
+     * @param id       the orgCode (String) – (@Id field)
+     * @param incoming the new organization contents
+     * @return the updated UCSBOrganization
+     */
+    @Operation(summary = &quot;Update a single organization&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @PutMapping(&quot;&quot;) 
+    public UCSBOrganization updateOrganization(
+            @Parameter(name=&quot;id&quot;) @RequestParam(name=&quot;id&quot;) String orgCode,
+            @RequestBody @Valid UCSBOrganization incoming) {
+
+<span class="fc" id="L79">        UCSBOrganization org = ucsbOrganizationRepository.findById(orgCode)</span>
+<span class="fc" id="L80">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, orgCode));</span>
+
+<span class="fc" id="L82">        org.setOrgTranslationShort(incoming.getOrgTranslationShort());</span>
+<span class="fc" id="L83">        org.setOrgTranslation(incoming.getOrgTranslation());</span>
+<span class="fc" id="L84">        org.setInactive(incoming.getInactive());</span>
+
+<span class="fc" id="L86">        ucsbOrganizationRepository.save(org);</span>
+<span class="fc" id="L87">        return org;</span>
+    }
 
     /**
      * Creates a new UCSBOrganization.  Accessible only to users with the role &quot;ROLE_ADMIN&quot;.
@@ -66,10 +105,29 @@ import jakarta.validation.Valid;
         @Parameter(name=&quot;orgTranslation&quot;) @RequestParam String orgTranslation,
         @Parameter(name=&quot;inactive&quot;) @RequestParam boolean inactive
     ) {
-<span class="fc" id="L69">        UCSBOrganization org = new UCSBOrganization(orgCode, orgTranslationShort, orgTranslation, inactive);</span>
 
-<span class="fc" id="L71">        UCSBOrganization savedOrg = ucsbOrganizationRepository.save(org);</span>
-<span class="fc" id="L72">        return savedOrg;</span>
+<span class="fc" id="L109">        UCSBOrganization org = new UCSBOrganization(orgCode, orgTranslationShort, orgTranslation, inactive);</span>
+
+<span class="fc" id="L111">        UCSBOrganization savedOrg = ucsbOrganizationRepository.save(org);</span>
+<span class="fc" id="L112">        return savedOrg;</span>
+    }
+
+    /**
+     * Delete a UCSBOrganization. Accessible only to users with the role &quot;ROLE_ADMIN&quot;.
+     * @param id  the orgCode (String) (@Id field)
+     * @return a message indicating the organization was deleted
+     */
+    @Operation(summary = &quot;Delete a single organization&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @DeleteMapping(&quot;&quot;)
+    public Object deleteOrganization(
+        @Parameter(name=&quot;id&quot;) @RequestParam(name=&quot;id&quot;) String orgCode
+    ) {
+<span class="fc" id="L126">        UCSBOrganization org = ucsbOrganizationRepository.findById(orgCode)</span>
+<span class="fc" id="L127">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, orgCode));</span>
+
+<span class="fc" id="L129">        ucsbOrganizationRepository.delete(org);</span>
+<span class="fc" id="L130">        return genericMessage(&quot;UCSBOrganization with id %s deleted&quot;.formatted(orgCode));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
