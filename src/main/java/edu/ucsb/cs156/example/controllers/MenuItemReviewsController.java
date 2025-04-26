@@ -90,4 +90,49 @@ public class MenuItemReviewsController extends ApiController {
 
         return savedMenuItemReviews;
     }
+
+    /**
+     * Get a single menuitemreviews by id
+     * 
+     * @param id the id of the menuitemreviews
+     * @return a MenuItemReviews
+     */
+    @Operation(summary= "Get a single menuitemreviews")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("")
+    public MenuItemReviews getById(
+            @Parameter(name="id") @RequestParam Long id) {
+        MenuItemReviews menuItemReviews = menuItemReviewsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(MenuItemReviews.class, id));
+
+        return menuItemReviews;
+    }
+
+    /**
+     * Update a single menuitemreviews
+     * 
+     * @param id       id of the menuitemreviews to update
+     * @param incoming the new menuitemreviews
+     * @return the updated menuitemreviews object
+     */
+    @Operation(summary= "Update a single menuitemreviews")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("")
+    public MenuItemReviews updateMenuItemReviews(
+            @Parameter(name="id") @RequestParam Long id,
+            @RequestBody @Valid MenuItemReviews incoming) {
+
+        MenuItemReviews menuItemReviews = menuItemReviewsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(MenuItemReviews.class, id));
+
+        menuItemReviews.setItemId(incoming.getItemId());
+        menuItemReviews.setReviewerEmail(incoming.getReviewerEmail());
+        menuItemReviews.setStars(incoming.getStars());
+        menuItemReviews.setComments(incoming.getComments());
+        menuItemReviews.setDateReviewed(incoming.getDateReviewed());
+
+        menuItemReviewsRepository.save(menuItemReviews);
+
+        return menuItemReviews;
+    }
 }
