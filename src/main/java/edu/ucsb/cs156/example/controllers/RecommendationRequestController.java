@@ -135,4 +135,23 @@ public class RecommendationRequestController extends ApiController {
         
         return request;
     }
+
+    /**
+     * Delete a recommendation request
+     * 
+     * @param id the id of the recommendation request to delete
+     * @return a message indicating the recommendation request was deleted
+     */
+    @Operation(summary = "Delete a recommendation request")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("")
+    public Object deleteRecommendationRequest(@Parameter(name = "id") @RequestParam Long id) {
+
+        RecommendationRequest toDelete = recommendationRequestRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(RecommendationRequest.class, id));
+
+        recommendationRequestRepository.delete(toDelete);
+
+        return genericMessage("RecommendationRequest with id %s deleted".formatted(id));
+    }
 }
