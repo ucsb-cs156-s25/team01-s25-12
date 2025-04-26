@@ -105,7 +105,8 @@ public class UCSBOrganizationController extends ApiController {
         @Parameter(name="orgTranslation") @RequestParam String orgTranslation,
         @Parameter(name="inactive") @RequestParam boolean inactive
     ) {
-        UCSBOrganization org = new UCSBOrganization(orgCode,orgTranslationShort,orgTranslation,inactive);
+
+        UCSBOrganization org = new UCSBOrganization(orgCode, orgTranslationShort, orgTranslation, inactive);
 
         UCSBOrganization savedOrg = ucsbOrganizationRepository.save(org);
         return savedOrg;
